@@ -34,8 +34,6 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-// Todo struct for the todo list
-
 type Todo struct {
 	ID          uuid.UUID `json:"id"`
 	Title       string    `json:"title"`
@@ -55,8 +53,6 @@ func authMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		fmt.Println("Incoming Token:", tokenStr)
-
 		// Extract Bearer from incoming token
 		tokenStr = tokenStr[7:]
 
@@ -69,8 +65,6 @@ func authMiddleware(next http.Handler) http.Handler {
 			http.Error(w, "Invalid or expired token", http.StatusUnauthorized)
 			return
 		}
-
-		fmt.Println("Claims:", claims)
 
 		next.ServeHTTP(w, r)
 	})
@@ -146,7 +140,6 @@ func createTodoHandler(w http.ResponseWriter, r *http.Request) {
 func getTodoHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
-	fmt.Printf("Incoming ID: %s", id)
 	for _, todo := range todoList {
 		if todo.ID.String() == id {
 			w.Header().Set("Content-Type", "application/json")
